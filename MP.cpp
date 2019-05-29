@@ -39,6 +39,7 @@ class MP {
                     anterior = l;
                     l = l->prox;   
                     free(p);
+                    continue;
                 }
 
                 anterior = l;
