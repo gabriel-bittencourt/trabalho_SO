@@ -4,6 +4,7 @@
 #include "Processo.cpp"
 
 typedef struct lista{
+    Processo processo;
     bool ocupado;
     int inicio; // em MB
     int tamanho; // em MB
@@ -46,7 +47,6 @@ class MP {
                 l = l->prox;
             }
 
-
         }
     
         void first_fit(Processo p){
@@ -57,7 +57,7 @@ class MP {
                 l = l->prox;
 
             if(!l){
-                // realocar(mp);
+                realocar(mp);
                 this->first_fit(p);
             }
 
@@ -72,6 +72,29 @@ class MP {
 
             l->ocupado = true;
             l->tamanho = p.tamanho;
+
+        }
+
+        LISTA* busca(Processo p){
+            LISTA* l = this->espacos;
+
+            while(l->prox){
+                if( l->processo.id == p.id ){
+                    return l;
+                }
+                l = l->prox;
+            }
+
+            return NULL;
+        }
+
+        void remover(Processo p){
+            LISTA* f = this->busca(p);
+            l->ocupado = false;
+            
+        }
+
+        Processo suspender(Processo p){
 
         }
 
