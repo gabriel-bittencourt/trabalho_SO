@@ -5,6 +5,7 @@ class Processo {
 
     private:
     	int id;
+		static int id_atual;
         int chegada;
         int prioridade;
         int tempo_processamento;
@@ -14,12 +15,7 @@ class Processo {
 
     public:
 
-        // funções
-
-};
-
-Processo::Processo(
-	int _id,
+	Processo(
 	int _chegada,
 	int _prioridade,
 	int _tempo_processamento, 
@@ -27,7 +23,7 @@ Processo::Processo(
 	int _impressoras,
 	int _discos
 ) {
-	id = _id;
+	id = id_atual++;
     chegada = _chegada;
 	prioridade = _prioridade;
 	tempo_processamento = _tempo_processamento;
@@ -35,3 +31,9 @@ Processo::Processo(
 	impressoras = _impressoras;
 	discos = _discos;
 }
+        // funções
+	
+
+};
+
+int Processo::id_atual = 0;

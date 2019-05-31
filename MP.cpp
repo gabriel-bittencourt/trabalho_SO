@@ -75,8 +75,8 @@ class MP {
 
         }
 
-        LISTA* busca(Processo p){
-            LISTA* l = this->espacos;
+        Lista* busca(Processo p){
+            Lista* l = this->espacos;
 
             while(l->prox){
                 if( l->processo.id == p.id ){
@@ -89,7 +89,7 @@ class MP {
         }
 
         void remover(Processo p){
-            LISTA* f = this->busca(p);
+            Lista* f = this->busca(p);
             l->ocupado = false;
             
         }
