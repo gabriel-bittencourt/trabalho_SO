@@ -1,10 +1,11 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+
 #include "Processo.cpp"
+#include "Fila.cpp"
 
 typedef struct lista{
-    Processo processo;
+    int id_processo;
     bool ocupado;
     int inicio; // em MB
     int tamanho; // em MB
@@ -53,25 +54,26 @@ class MP {
 
             Lista* l = this->espacos;
             
-            while( l->prox && ( l->ocupado || (l->tamanho < p.tamanho) ) )
+            while( l->prox && ( l->ocupado || (l->tamanho < p.getTamanho()) ) )
                 l = l->prox;
 
             if(!l){
-                realocar(mp);
+                this->realocar();
                 this->first_fit(p);
             }
 
-            if(p.tamanho > l->tamanho){
+            if(p.getTamanho() > l->tamanho){
                 Lista* novo = (Lista *) malloc(sizeof(Lista));
-                novo->inicio = l->inicio + p.tamanho;
-                novo->tamanho = p.tamanho - l->tamanho;
+
+                novo->inicio = l->inicio + p.getTamanho();
+                novo->tamanho = p.getTamanho() - l->tamanho;
                 novo->ocupado = false;
                 novo->prox = l->prox;
                 l->prox = novo;
             }
 
             l->ocupado = true;
-            l->tamanho = p.tamanho;
+            l->tamanho = p.getTamanho();
 
         }
 
@@ -79,7 +81,7 @@ class MP {
             Lista* l = this->espacos;
 
             while(l->prox){
-                if( l->processo.id == p.id ){
+                if( l->id_processo == p.getId() ){
                     return l;
                 }
                 l = l->prox;
@@ -89,13 +91,13 @@ class MP {
         }
 
         void remover(Processo p){
-            Lista* f = this->busca(p);
+            Lista* l = this->busca(p);
             l->ocupado = false;
-            
         }
 
-        Processo suspender(Processo p){
-
+        Processo suspender(Processo p, Fila suspensos){
+            suspensos.inserir(p);
+            this->remover(p);
         }
 
         int memoria_usada(){
