@@ -63,20 +63,20 @@ class Processo {
 
 		int getDiscos();
 
-		int setId(int _id);
+		void setId(int _id);
 		
-		int setChegada(int _chegada);
+		void setChegada(int _chegada);
 
-		int setPrioridade(int _prioridade);
+		void setPrioridade(int _prioridade);
 
-		int setTempoProcessamento(int _tempo_processamento);
+		void setTempoProcessamento(int _tempo_processamento);
 
-		int setTamanho(int _tamanho);
+		void setTamanho(int _tamanho);
 
-		int setImpressoras(int _impressoras);
+		void setImpressoras(int _impressoras);
 
-		int setDiscos(int _discos);
-		
+		void setDiscos(int _discos);
+
 };
 
 int Processo::id_atual = 0;
@@ -109,30 +109,30 @@ int Processo::getDiscos(){
 	return discos;
 }
 
-int Processo::setId(int _id){
+void Processo::setId(int _id){
 	id = _id;
 }
 
-int Processo::setChegada(int _chegada){
+void Processo::setChegada(int _chegada){
 	chegada = _chegada;
 }
 
-int Processo::setPrioridade(int _prioridade){
+void Processo::setPrioridade(int _prioridade){
 	prioridade = _prioridade;
 }
 
-int Processo::setTempoProcessamento(int _tempo_processamento){
+void Processo::setTempoProcessamento(int _tempo_processamento){
 	tempo_processamento = _tempo_processamento;
 }
 
-int Processo::setTamanho(int _tamanho){
+void Processo::setTamanho(int _tamanho){
 	tamanho = _tamanho;
 }
 
-int Processo::setImpressoras(int _impressoras){
+void Processo::setImpressoras(int _impressoras){
 	impressoras = _impressoras;
 }
 
-int Processo::setDiscos(int _discos){
+void Processo::setDiscos(int _discos){
 	discos = _discos;
 }
