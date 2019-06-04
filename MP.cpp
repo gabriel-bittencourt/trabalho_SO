@@ -1,78 +1,83 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <list>
 #include "Processo.cpp"
 
-typedef struct lista{
-    Processo processo;
+typedef struct no{
+    int processo;
     bool ocupado;
     int inicio; // em MB
     int tamanho; // em MB
-    struct lista * prox;
-} Lista;
+} No;
 
+using namespace std;
 
 class MP {
 
     private:
         int tamanho;
-        Lista* espacos;
+        list<No> espacos;
 
     public:
         void realocar(){
+            
+            list<No>::iterator anterior = espacos.begin();
+            list<No>::iterator atual = ++espacos.begin();
 
-            Lista* l = this->espacos;
-            Lista* anterior;
-            Lista* ultimo_ocupado;
-
-            Lista* vazio = (Lista*) malloc(sizeof(Lista));
-            vazio->tamanho = 0;
-
-            while( l->prox ){
-                if( l->ocupado )
-                    ultimo_ocupado = l;
-
-                if( !l->ocupado ){
-                    vazio->tamanho += l->tamanho;
-
-                    anterior->prox = l->prox;
-                    Lista* p = l;
-                    anterior = l;
-                    l = l->prox;   
-                    free(p);
-                    continue;
+            while(anterior != espacos.end() && atual != espacos.end())
+            {   
+                // Se o anterior for buraco,
+                // o próximo processo pega o lugar do buraco
+                if(!anterior->ocupado){
+                    atual->inicio = anterior->inicio;
+                    espacos.erase(anterior++);
                 }
 
-                anterior = l;
-                l = l->prox;
+                // Se o anterior for processo,
+                // o proximo é ajustado
+                else{
+                    atual->inicio = anterior->inicio + anterior->tamanho;
+                    anterior++;
+                }
+                atual++;
             }
 
+            // Se o último nó for um buraco,
+            // ajusta ao novo tamanho
+            if(!anterior->ocupado){
+                anterior->tamanho = tamanho - anterior->inicio;
+            }
+
+            // Se for um processo,
+            // cria um buraco depois dele
+            else{
+                No aux;
+                aux.ocupado = false;
+                aux.inicio = anterior->inicio + anterior->tamanho;
+                aux.tamanho = tamanho - aux.inicio;
+                espacos.push_back(aux);
+            }
         }
     
-        void first_fit(Processo p){
+        bool first_fit(Processo p){
 
-            Lista* l = this->espacos;
-            
-            while( l->prox && ( l->ocupado || (l->tamanho < p.tamanho) ) )
-                l = l->prox;
+            No novo;
+            novo.ocupado = true;
+            novo.tamanho = tamanho;
 
-            if(!l){
-                realocar(mp);
-                this->first_fit(p);
-            }
-
-            if(p.tamanho > l->tamanho){
-                Lista* novo = (Lista *) malloc(sizeof(Lista));
-                novo->inicio = l->inicio + p.tamanho;
-                novo->tamanho = p.tamanho - l->tamanho;
-                novo->ocupado = false;
-                novo->prox = l->prox;
-                l->prox = novo;
-            }
-
-            l->ocupado = true;
-            l->tamanho = p.tamanho;
-
+            for(list<No>::iterator it = espacos.begin(); it != espacos.end(); it++)
+                // Se achar um buraco em que caiba
+                if(!it->ocupado && it->tamanho >= novo.tamanho){
+                    novo.inicio = it->inicio;
+                    it->inicio = it->inicio + novo.tamanho;
+                    it->tamanho = it->tamanho - novo.tamanho;
+                    espacos.insert(it, novo);
+                    if (it->tamanho == 0)    espacos.erase(it);
+                    return true;
+                }
+            // Caso não caiba em nenhum buraco
+            return false;
         }
 
         Lista* busca(Processo p){
@@ -101,14 +106,8 @@ class MP {
         int memoria_usada(){
             int m = 0;
 
-            Lista* l = this->espacos;
-
-            while(l->prox){
-                if(l->ocupado)
-                    m+= l->tamanho;
-
-                l = l->prox;
-            }
+            for(list<No>::iterator it = espacos.begin(); it != espacos.end(); it++)
+                if(it->ocupado)  m+= it->tamanho;
 
             return m;
         }
