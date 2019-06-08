@@ -4,10 +4,41 @@
 #include <vector>
 #include <sstream>
 #include <list>
-#include "Processo.cpp"
+#include "Processo.h"
 using namespace std;
 
-vector<Processo*> lerProcessosDeArquivo(string nomeArq){
+static void ordernarPorChegada(list<Processo*> &processos){
+
+    processos.sort([](Processo* p1, Processo* p2){
+        
+        if( p1->getChegada() == p2->getChegada() ){
+
+            if( p1->getPrioridade() == p2->getPrioridade() ){
+
+                if( p1->getImpressoras() == p2->getImpressoras() ){
+
+                    if( p1->getDiscos() == p2->getDiscos() ){
+
+                        return p1->getTempoProcessamento() < p2->getTempoProcessamento();
+
+                    }
+                    return p1->getDiscos() < p1->getDiscos();
+
+                }
+                return p1->getImpressoras() < p2->getImpressoras();
+
+            }
+            return p1->getPrioridade() < p2->getPrioridade();
+
+        }
+        return p1->getChegada() < p2->getChegada();
+
+    });
+
+};
+
+
+static list<Processo*> lerProcessosDeArquivo(string nomeArq){
     vector<string> entrada;
     ifstream arqEntrada(nomeArq);
     if(arqEntrada.is_open()){ // abertura do arquivo, caso tudo de certo
@@ -41,7 +72,8 @@ vector<Processo*> lerProcessosDeArquivo(string nomeArq){
             dados.push_back(dado); // armazeno cada dado referente a um processo em uma posicao do vetor
         }
     }
-    vector<Processo*> processos;
+
+    list<Processo*> processos;
     int cont_processos = 0; // contador que irá controlar a selecao dos arquivos, so sera incrementada depois que forem achados 6 dados em funcao do indice
     int chegada, prioridade, tempo_processamento, tamanho, impressoras, discos;
     for(vector<string>::size_type i = 0; i != dados.size(); i++){ // percorre vetor pelo indice
@@ -74,5 +106,6 @@ vector<Processo*> lerProcessosDeArquivo(string nomeArq){
         }
     }
     processos.push_back(new Processo(chegada, prioridade, tempo_processamento, tamanho, impressoras, discos)); // cria processo dos ultimos 6 dados que nao entraram no else do for
+    ordernarPorChegada(processos);
     return processos;
 }
