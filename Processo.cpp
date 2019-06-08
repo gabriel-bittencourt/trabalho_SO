@@ -75,6 +75,10 @@ int Processo::getDiscos(){
 	return discos;
 }
 
+int Processo::getUltimaFila(){
+	return ultima_fila;
+}
+
 void Processo::setId(int _id){
 	id = _id;
 }
@@ -101,4 +105,8 @@ void Processo::setImpressoras(int _impressoras){
 
 void Processo::setDiscos(int _discos){
 	discos = _discos;
+}
+
+void Processo::setUltimaFila(int _ultima_fila){
+	ultima_fila = _ultima_fila;
 }

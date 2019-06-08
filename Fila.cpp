@@ -1,6 +1,8 @@
-#include <stdio.h> 
 #include <stdlib.h>
-#include "Processo.cpp"
+#include <iostream>
+using namespace std;
+
+#include "Processo.h"
 
 typedef struct fila{
     
@@ -15,7 +17,22 @@ class Fila {
         FILA* fila;
 
     public:
-        void insere(Processo p){
+
+        Fila(){
+            fila = NULL;
+        };
+
+        int tamanho(){
+            int x = 0;
+            FILA* f = this->getFila();
+            while( f ){
+                x++;
+                f = f->prox;
+            }
+            return x;
+        }
+
+        void inserir(Processo* p){
 
             FILA* novo = (FILA*) malloc(sizeof(FILA));
             novo->processo = p;
@@ -24,7 +41,7 @@ class Fila {
 
         }
 
-        Processo retira(){
+        Processo* retirar(){
             FILA* f = this->fila;
             FILA* aux;
 
@@ -34,31 +51,29 @@ class Fila {
             }
 
             aux->prox = NULL;
-            Processo p(
-                f->processo.id,
-                f->processo.chegada,
-                f->processo.prioridade,
-                f->processo.tempo_processamento,
-                f->processo.tamanho,
-                f->processo.impressoras,
-                f->processo.discos
-            );
-            delete f->processo;
+
+            Processo* p = f->processo;
             free(f);
             return p;
-
         }
 
-        void libera(){
-            libera(this->fila);
+        bool empty(){
+            return this->getFila() == NULL;
         }
 
-        void libera(FILA* f) {
+        void liberar(){
+            liberar(this->fila);
+        }
+
+        void liberar(FILA* f) {
             if( f ) {
-                libera(f -> prox);
+                liberar(f -> prox);
                 free(f);
             }
         }
 
-};
+        FILA* getFila(){
+            return this->fila;
+        }
 
+};
