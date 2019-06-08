@@ -12,6 +12,7 @@ class Processo {
         int tamanho;
         int impressoras;
         int discos;
+		int ultima_fila;
 
     public:
 
@@ -48,6 +49,8 @@ class Processo {
 
 		int getDiscos();
 
+		int getUltimaFila();
+
 		void setId(int _id);
 		
 		void setChegada(int _chegada);
@@ -61,6 +64,8 @@ class Processo {
 		void setImpressoras(int _impressoras);
 
 		void setDiscos(int _discos);
+
+		void setUltimaFila(int _ultima_fila);
 
 };
 

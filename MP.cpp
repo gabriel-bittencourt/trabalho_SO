@@ -4,6 +4,7 @@
 #include <list>
 #include "Processo.cpp"
 
+
 typedef struct no{
     int processo;
     bool ocupado;
@@ -20,6 +21,19 @@ class MP {
         list<No> espacos;
 
     public:
+
+        MP(int _tamanho){
+            tamanho = _tamanho;
+
+            No primeiroNo;
+            
+            primeiroNo.ocupado = false;
+            primeiroNo.inicio = 0;
+            primeiroNo.tamanho = _tamanho;
+
+            espacos.push_back( primeiroNo );
+        }
+
         void realocar(){
             
             list<No>::iterator anterior = espacos.begin();
@@ -78,29 +92,6 @@ class MP {
                 }
             // Caso não caiba em nenhum buraco
             return false;
-        }
-
-        Lista* busca(Processo p){
-            Lista* l = this->espacos;
-
-            while(l->prox){
-                if( l->processo.id == p.id ){
-                    return l;
-                }
-                l = l->prox;
-            }
-
-            return NULL;
-        }
-
-        void remover(Processo p){
-            Lista* f = this->busca(p);
-            l->ocupado = false;
-            
-        }
-
-        Processo suspender(Processo p){
-
         }
 
         int memoria_usada(){
