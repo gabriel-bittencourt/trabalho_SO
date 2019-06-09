@@ -2,73 +2,64 @@
 #include <iostream>
 using namespace std;
 
-#include "Processo.h"
+#include "headers/CPU.h"
 
-class CPU{
 
-    private:
-        bool ocupado;
-        int tempo_processo_atual; // Para política de feedback
-        Processo* processo;
+CPU::CPU(){
+    ocupado = false;
+    tempo_processo_atual = 0;
+}
 
-    public:
+void CPU::receberProcesso(Processo* p){
+    processo = p;
+    ocupado = true;
+    tempo_processo_atual = 0;
+}
 
-        CPU(){
-            ocupado = false;
-            tempo_processo_atual = 0;
-        }
+Processo* CPU::liberarProcesso(){
+    tempo_processo_atual = 0;
+    ocupado = false;
+    return processo;
+}
 
-        void receberProcesso(Processo* p){
-            processo = p;
-            tempo_processo_atual = 0;
-        }
+void CPU::executar(){
 
-        Processo* liberarProcesso(){
-            tempo_processo_atual = 0;
-            ocupado = false;
-            return processo;
-        }
+    processo->setTempoProcessamento(
+        processo->getTempoProcessamento() - 1
+    );
+    tempo_processo_atual++;
+}
 
-        void executar(){
+void CPU::imprimirEstado(){
 
-            processo->setTempoProcessamento(
-                processo->getTempoProcessamento() - 1
-            );
-            tempo_processo_atual++;
-        }
+    if( ocupado ){
+        processo->imprimir();
+        cout << "Tempo de processamento atual: " << tempo_processo_atual << " s\n" << endl;
+    } else
+        cout << "CPU ociosa!" << endl;
 
-        void imprimirEstado(){
+}
 
-            if( ocupado ){
-                cout << "Processo atual:" << endl;
-                processo->imprimir();
-                cout << "Tempo de processamento atual: " << tempo_processo_atual << " s" << endl;
-            } else
-                cout << "CPU ociosa!" << endl;
+void CPU::setProcesso(Processo* _processo){
+    processo = _processo;
+}
 
-        }
+void CPU::setOcupado(bool _ocupado){
+    ocupado = _ocupado;
+}
 
-        void setProcesso(Processo* _processo){
-            processo = _processo;
-        }
+void CPU::setTempoProcessoAtual(int _tempo_processo_atual){
+    tempo_processo_atual = _tempo_processo_atual;
+}
 
-        void setOcupado(bool _ocupado){
-            ocupado = _ocupado;
-        }
+Processo* CPU::getProcesso(){
+    return processo;
+}
 
-        void setTempoProcessoAtual(int _tempo_processo_atual){
-            tempo_processo_atual = _tempo_processo_atual;
-        }
+bool CPU::getOcupado(){
+    return ocupado;
+}
 
-        Processo* getProcesso(){
-            return processo;
-        }
-
-        bool getOcupado(){
-            return ocupado;
-        }
-
-        int getTempoProcessoAtual(){
-            return tempo_processo_atual;
-        }
-};
+int CPU::getTempoProcessoAtual(){
+    return tempo_processo_atual;
+}

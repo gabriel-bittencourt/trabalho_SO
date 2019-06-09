@@ -2,7 +2,7 @@
 #include <iostream> 
 using namespace std;
 
-#include "Processo.h"
+#include "headers/Processo.h"
 
 Processo::Processo(){};
 
@@ -43,7 +43,7 @@ void Processo::imprimir(){
 		 << "Tempo de Processamento: " << this->getTempoProcessamento() << " s"<< endl
          << "Tamanho: " << this->getTamanho() << " MB" << endl
          << "Impressoras: " << this->getImpressoras() << endl
-         << "Discos: " << this->getDiscos() << endl << endl;
+         << "Discos: " << this->getDiscos() << endl;
 }
 
 
