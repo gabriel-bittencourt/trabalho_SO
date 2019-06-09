@@ -2,78 +2,38 @@
 #include <iostream>
 using namespace std;
 
-#include "Processo.h"
+#include "headers/Fila.h"
 
-typedef struct fila{
-    
-    Processo* processo;
-    struct fila* prox;
+#include "headers/Processo.h"
 
-} FILA;
 
-class Fila {
-
-    private:
-        FILA* fila;
-
-    public:
-
-        Fila(){
-            fila = NULL;
-        };
-
-        int tamanho(){
-            int x = 0;
-            FILA* f = this->getFila();
-            while( f ){
-                x++;
-                f = f->prox;
-            }
-            return x;
-        }
-
-        void inserir(Processo* p){
-
-            FILA* novo = (FILA*) malloc(sizeof(FILA));
-            novo->processo = p;
-            novo->prox = this->fila;
-            this->fila = novo;
-
-        }
-
-        Processo* retirar(){
-            FILA* f = this->fila;
-            FILA* aux;
-
-            while(f->prox){
-                aux = f;
-                f = f->prox;
-            }
-
-            aux->prox = NULL;
-
-            Processo* p = f->processo;
-            free(f);
-            return p;
-        }
-
-        bool empty(){
-            return this->getFila() == NULL;
-        }
-
-        void liberar(){
-            liberar(this->fila);
-        }
-
-        void liberar(FILA* f) {
-            if( f ) {
-                liberar(f -> prox);
-                free(f);
-            }
-        }
-
-        FILA* getFila(){
-            return this->fila;
-        }
-
+Fila::Fila(){
+    fila = {};
 };
+
+int Fila::tamanho(){
+    return fila.size();
+}
+
+void Fila::inserir(Processo* p){
+    fila.push_back(p);
+}
+
+Processo* Fila::retirar(){
+    Processo* p = fila.front();
+    fila.pop_front();
+    return p;
+}
+
+bool Fila::empty(){
+    return fila.empty();
+}
+
+void Fila::liberar(){
+    fila.clear();
+}
+
+
+list<Processo*> Fila::getFila(){
+    return this->fila;
+}

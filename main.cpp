@@ -5,11 +5,8 @@
 using namespace std;
 
 
-#include "Escalonador.cpp"
+#include "headers/Escalonador.h"
 #include "ListaEntrada.cpp"
-#include "CPU.cpp"
-#include "MP.cpp"
-#include "Processo.h"
 
 
 #define IMPRESSORAS 2
@@ -42,7 +39,6 @@ int main(void){
 
     // Inicializa escalonador
     Escalonador* escalonador = new Escalonador(processosEntrada, cpus, mp, impressoras, discos);
-
 
     return 0;
 }

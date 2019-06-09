@@ -4,8 +4,10 @@
 #include <vector>
 #include <sstream>
 #include <list>
-#include "Processo.h"
 using namespace std;
+
+#include "headers/Processo.h"
+
 
 static void ordernarPorChegada(list<Processo*> &processos){
 
