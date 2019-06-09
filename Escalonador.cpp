@@ -53,7 +53,7 @@ void Escalonador::encaminharProcessos(int tempo_atual){
                 mp->realocar();                 // Se não conseguir alocar
 
                 if( !mp->first_fit(processo) && processo->getPrioridade() == 0 ){   // Se for de tempo real, tem que ser submetido
-                    mp->suspender(feedback, N_FILAS_FEEDBACK, suspensos, processo->getTamanho(), &impressorasDisponiveis, &discosDisponiveis);
+                    suspender(processo->getTamanho());
                     mp->realocar();
                     mp->first_fit(processo);
                 }
@@ -225,4 +225,25 @@ int Escalonador::getImpressorasDisponiveis(){
 
 int Escalonador::getDiscosDisponiveis(){
     return discosDisponiveis;
+}
+
+void Escalonador::suspender(int tam_necessario){
+    
+    int tamanhoLivre = mp->getTamanho() - mp->memoria_usada();    
+
+    // Percorre filas da de menor prioridade pra de maior prioridade
+    for(int fila = N_FILAS_FEEDBACK; fila > 0 && tamanhoLivre < tam_necessario; fila--){
+        
+        if(!feedback[fila]->empty()){
+            Processo* p = feedback[fila]->retirar();
+
+            // Atualiza impressoras e discos disponíveis
+            impressorasDisponiveis += p->getImpressoras();
+            discosDisponiveis += p->getDiscos();
+
+            tamanhoLivre += p->getTamanho();
+
+            suspensos->inserir(p);
+        }
+    }
 }

@@ -28,12 +28,13 @@ class MP {
     
         bool first_fit(Processo* p);
 
-        void suspender(Fila** feedback, int n_filas, Fila* suspensos, int tam_necessario, int* impressorasSistema, int* discosSistema);
-
         int buscar(Processo* processo);
 
         int memoria_usada();
 
+        void remover(Processo processo);
+
+        int getTamanho();
 };
 
 #endif

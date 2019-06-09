@@ -53,6 +53,8 @@ class Escalonador{
 
         int getDiscosDisponiveis();
 
+        void Escalonador::suspender(int tam_necessario);
+
 };
 
 #endif

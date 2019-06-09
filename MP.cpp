@@ -81,32 +81,6 @@ bool MP::first_fit(Processo* p){
     return false;
 }
 
-void MP::suspender(Fila** feedback, int n_filas, Fila* suspensos, int tam_necessario, int* impressorasSistema, int* discosSistema){
-    
-    int tamanhoLivre = tamanho - memoria_usada();
-
-    while( tamanhoLivre < tam_necessario ){
-        
-        for(int fila = n_filas; fila > 0; fila--){             // Percorre filas da de menor prioridade pra de maior prioridade
-            
-            if( !feedback[fila]->empty() ){
-                Processo* p = feedback[fila]->retirar();
-
-                // Atualiza impressoras e discos disponíveis
-                *impressorasSistema += p->getImpressoras();
-                *discosSistema += p->getDiscos();
-
-                tamanhoLivre += p->getTamanho();
-
-                suspensos->inserir(p);
-                break;
-            }
-
-        }
-    }
-
-}
-
 int MP::buscar(Processo* processo){
     for(No no : espacos){
         if( no.processo == processo->getId() )
@@ -124,3 +98,46 @@ int MP::memoria_usada(){
     return m;
 }
 
+void MP::remover(Processo processo){
+    list<No>::iterator no = espacos.begin();
+    list<No>::iterator prox, ant;
+
+    while(no->processo != processo.getId()) no++; // Ensontra o processo na lista
+
+    if(no == espacos.begin()){  // Se for o primeiro da lista
+        no->ocupado = false;
+        prox = no;
+        prox++;
+        if(prox->ocupado)    return;    // Se o proximo estiver ocupado, só libera o espaco do no
+        no->tamanho += prox->tamanho;   // Se não, adiciona o tamanho do buraco seguinte
+        espacos.erase(prox);            // Remove o buraco seguinte
+        return;
+    }
+
+    prox = no;
+    prox++;
+    if(prox == espacos.end()){  // Se for o último da lista
+        no->ocupado = false;    // Só libera o espaco do nó
+        return;
+    }
+
+    if(!prox->ocupado){ // Se estiver no meio da lista e o proximo for buraco
+        no->ocupado = false;    // Libera o espaco do nó
+        no->tamanho += prox->tamanho;   // Adiciona o tamanho do buraco seguinte
+        espacos.erase(prox);    // Remove o buraco
+    }
+    ant = no;
+    ant--;
+    if(!ant->ocupado){  // Se estiver no meio da lista e o anterior for buraco
+        ant->tamanho += no->tamanho;    // Adiciona o tamanho do no ao buraco anterior
+        espacos.erase(no);  // Remove o nó
+        return;
+    }
+
+    no->ocupado = false;    // Se o anterior e o próximo forem processos, só libera o espaço do nó
+    
+}
+
+int MP::getTamanho(){
+    return tamanho;
+}
