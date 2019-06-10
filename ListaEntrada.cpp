@@ -49,10 +49,12 @@ static list<Processo*> lerProcessosDeArquivo(string nomeArq){
             entrada.push_back(linha); // armazeno no vetor entrada cada linha do arquivo
         }
         arqEntrada.close(); // fechamento do arquivo
+        cout << "Arquivo aberto com sucesso!";
+
     }
     else
     {
-        cout <<"Nao foi possivel abrir o arquivo";
+        cout << "Arquivo nao foi aberto!";
     }
 
     vector<string> linhaProcessos;

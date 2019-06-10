@@ -4,6 +4,7 @@
 #include "Fila.h"
 #include "CPU.h"
 #include "MP.h"
+#include "Processo.h"
 
 #define N_FILAS_FEEDBACK 3
 
@@ -47,11 +48,15 @@ class Escalonador{
 
         void submeterProcessos();
 
-        void teste();
+        void imprimirProcessosEntrada();
+
+        void imprimirProcessosCPUs();
 
         int getImpressorasDisponiveis();
 
         int getDiscosDisponiveis();
+
+        Fila* getSuspensos();
 
 };
 
