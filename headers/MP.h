@@ -32,7 +32,7 @@ class MP {
 
         int memoria_usada();
 
-        void remover(Processo processo);
+        void remover(Processo* processo);
 
         int getTamanho();
 };

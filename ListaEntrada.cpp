@@ -7,6 +7,7 @@
 using namespace std;
 
 #include "headers/Processo.h"
+#include "headers/ConsoleManager.h"
 
 
 static void ordernarPorChegada(list<Processo*> &processos){
@@ -49,10 +50,11 @@ static list<Processo*> lerProcessosDeArquivo(string nomeArq){
             entrada.push_back(linha); // armazeno no vetor entrada cada linha do arquivo
         }
         arqEntrada.close(); // fechamento do arquivo
+        imprimirLinhaFormatada("Arquivo aberto com sucesso!", Alinhamento::ESQUERDA, true);
     }
     else
     {
-        cout <<"Nao foi possivel abrir o arquivo";
+        imprimirLinhaFormatada("Nao foi possivel abrir o arquivo", Alinhamento::ESQUERDA, true);
     }
 
     vector<string> linhaProcessos;

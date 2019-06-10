@@ -47,13 +47,15 @@ class Escalonador{
 
         void submeterProcessos();
 
-        void teste();
+        void imprimirProcessosEntrada();
+
+        void imprimirProcessosCPUs();
 
         int getImpressorasDisponiveis();
 
         int getDiscosDisponiveis();
 
-        void Escalonador::suspender(int tam_necessario);
+        void suspender(int tam_necessario);
 
 };
 

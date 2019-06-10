@@ -30,16 +30,6 @@ void CPU::executar(){
     tempo_processo_atual++;
 }
 
-void CPU::imprimirEstado(){
-
-    if( ocupado ){
-        processo->imprimir();
-        cout << "Tempo de processamento atual: " << tempo_processo_atual << " s\n" << endl;
-    } else
-        cout << "CPU ociosa!" << endl;
-
-}
-
 void CPU::setProcesso(Processo* _processo){
     processo = _processo;
 }

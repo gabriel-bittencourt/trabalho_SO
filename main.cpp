@@ -17,11 +17,17 @@ using namespace std;
 
 
 int main(void){
-
+    novaLinha(1);
+    imprimirLinhaFormatada("-------------------------------------------------", (Alinhamento::CENTRO), true);
+    imprimirLinhaFormatada("E S C A L O N A D O R    D E    P R O C E S S O S", (Alinhamento::CENTRO), true);
+    imprimirLinhaFormatada("-------------------------------------------------", (Alinhamento::CENTRO), true);
+    imprimirLinhaFormatada("Iniciando leitura do arquivo de entrada...", (Alinhamento::ESQUERDA), true);
+    novaLinha(1);
     // Lê arquivo de entrada
     list<Processo*> processosEntrada;
     processosEntrada = lerProcessosDeArquivo("entrada.txt");
-
+    novaLinha(1);
+    imprimirLinhaFormatada("* * * * *", (Alinhamento::CENTRO), true);
 
     // Inicializa CPUs
     list<CPU*> cpus;
@@ -39,6 +45,35 @@ int main(void){
 
     // Inicializa escalonador
     Escalonador* escalonador = new Escalonador(processosEntrada, cpus, mp, impressoras, discos);
+    escalonador->imprimirProcessosEntrada();
+    novaLinha(2);
+    imprimirLinhaFormatada("----------------INICIANDO ESCALONADOR----------------", (Alinhamento::CENTRO), true);
+    novaLinha(2);
+    char continuar = 's';
+    int tempo_atual = 0;
+
+    while(!processosEntrada.empty() && (continuar == 's' || continuar =='S')){
+        imprimirLinhaFormatada("TEMPO ATUAL --> " + to_string(tempo_atual) + "s", (Alinhamento::ESQUERDA), true);
+        escalonador->encaminharSuspensos();
+
+        escalonador->encaminharProcessos(tempo_atual);
+
+        escalonador->submeterProcessos();
+
+        escalonador->imprimirProcessosCPUs();
+
+        escalonador->executarProcessos();
+        tempo_atual++;
+        imprimirLinhaFormatada("CONTINUAR?  (S)  (N)", (Alinhamento::CENTRO), true);
+        cin >> continuar;
+    }
+    novaLinha(1);
+    if(continuar != 's'|| continuar != 's')
+        imprimirLinhaFormatada("* * * * SAINDO DO ESCALONADOR DE PROCESSOS * * * *", (Alinhamento::CENTRO), true);
+    else
+        imprimirLinhaFormatada("* * * TODOS OS PROCESSOS FORAM PROCESSADOS * * *", (Alinhamento::CENTRO),true);
+    novaLinha(1);
+    imprimirLinhaFormatada("--------ESCALONADOR DE PROCESSOS ENCERRADO--------", (Alinhamento::CENTRO), true);
 
     return 0;
 }

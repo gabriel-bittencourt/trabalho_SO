@@ -20,8 +20,6 @@ class CPU{
 
         void executar();
 
-        void imprimirEstado();
-
         void setProcesso(Processo* _processo);
 
         void setOcupado(bool _ocupado);

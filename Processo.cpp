@@ -3,6 +3,7 @@
 using namespace std;
 
 #include "headers/Processo.h"
+#include "headers/ConsoleManager.h"
 
 Processo::Processo(){};
 
@@ -37,13 +38,20 @@ Processo::Processo(const Processo &p) {
 int Processo::id_atual = 0;
 
 void Processo::imprimir(){
-    cout << "Processo: " << this->getId() << endl
-         << "Chegada: " << this->getChegada() << endl
-         << "Prioridade: " << this->getPrioridade() << endl
-		 << "Tempo de Processamento: " << this->getTempoProcessamento() << " s"<< endl
-         << "Tamanho: " << this->getTamanho() << " MB" << endl
-         << "Impressoras: " << this->getImpressoras() << endl
-         << "Discos: " << this->getDiscos() << endl;
+	printCharRep('-', 100, true);
+	imprimirLinhaFormatadaDef(to_string(chegada), (Alinhamento::CENTRO), 8, false);
+	cout << " | ";
+    imprimirLinhaFormatadaDef(to_string(id), (Alinhamento::CENTRO), 9, false);
+	cout << " | ";
+	imprimirLinhaFormatadaDef(to_string(prioridade), (Alinhamento::CENTRO), 11,  false);
+	cout << " | ";
+	imprimirLinhaFormatadaDef(to_string(tempo_processamento), (Alinhamento::CENTRO), 23, false);
+	cout << " | ";
+    imprimirLinhaFormatadaDef(to_string(tamanho), (Alinhamento::CENTRO), 8, false);
+	cout << " | ";
+    imprimirLinhaFormatadaDef(to_string(impressoras), (Alinhamento::CENTRO), 12, false);
+	cout << " | ";
+    imprimirLinhaFormatadaDef(to_string(discos), (Alinhamento::CENTRO), 7, true);
 }
 
 
