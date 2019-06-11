@@ -98,11 +98,11 @@ int MP::memoria_usada(){
     return m;
 }
 
-void MP::remover(Processo processo){
+void MP::remover(Processo* processo){
     list<No>::iterator no = espacos.begin();
     list<No>::iterator prox, ant;
 
-    while(no->processo != processo.getId()) no++; // Ensontra o processo na lista
+    while(no->processo != processo->getId()) no++; // Encontra o processo na lista
 
     if(no == espacos.begin()){  // Se for o primeiro da lista
         no->ocupado = false;

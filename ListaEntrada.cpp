@@ -24,10 +24,10 @@ static void ordernarPorChegada(list<Processo*> &processos){
                         return p1->getTempoProcessamento() < p2->getTempoProcessamento();
 
                     }
-                    return p1->getDiscos() < p1->getDiscos();
+                    return p1->getDiscos() > p1->getDiscos();
 
                 }
-                return p1->getImpressoras() < p2->getImpressoras();
+                return p1->getImpressoras() > p2->getImpressoras();
 
             }
             return p1->getPrioridade() < p2->getPrioridade();
@@ -49,10 +49,11 @@ static list<Processo*> lerProcessosDeArquivo(string nomeArq){
             entrada.push_back(linha); // armazeno no vetor entrada cada linha do arquivo
         }
         arqEntrada.close(); // fechamento do arquivo
+        imprimirLinhaFormatada("Arquivo aberto com sucesso!", Alinhamento::ESQUERDA, true);
     }
     else
     {
-        cout <<"Nao foi possivel abrir o arquivo";
+        imprimirLinhaFormatada("Nao foi possivel abrir o arquivo", Alinhamento::ESQUERDA, true);
     }
 
     vector<string> linhaProcessos;

@@ -29,6 +29,7 @@ class Escalonador{
 
         int impressorasDisponiveis;          // Impressoras e Discos disponíveis no sistema
         int discosDisponiveis;
+        int cpusociosas;
 
 
     public:
@@ -47,13 +48,17 @@ class Escalonador{
 
         void submeterProcessos();
 
-        void teste();
+        void imprimirProcessosEntrada();
+
+        void imprimirProcessosCPUs();
 
         int getImpressorasDisponiveis();
 
         int getDiscosDisponiveis();
 
-        void Escalonador::suspender(int tam_necessario);
+        list<Processo*> getEntrada();
+
+        void suspender(int tam_necessario);
 
 };
 
