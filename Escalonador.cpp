@@ -44,7 +44,10 @@ void Escalonador::encaminharProcessos(int tempo_atual){
             
             // Checar impressoras e discos
             if( processo->getImpressoras() > impressorasDisponiveis || processo->getDiscos() > discosDisponiveis ){
-                entradaTemp.push_back(processo);
+                suspensos->inserir(processo);
+                novaLinha(1);
+                imprimirLinhaFormatada("PROCESSO "+ to_string(processo->getId())+" FOI SUSPENSO", (Alinhamento::ESQUERDA), true);
+                novaLinha(1);
                 continue;
             }
 
@@ -58,8 +61,29 @@ void Escalonador::encaminharProcessos(int tempo_atual){
                     mp->realocar();
                     mp->first_fit(processo);
                 }
-                else{                           // Se não for de tempo real, continua na lista de entrada
-                    entradaTemp.push_back(processo);
+                else if (mp->first_fit(processo) && processo->getPrioridade() == 0 ){  
+                    FTR->inserir( processo );
+                    novaLinha(1);
+                    imprimirLinhaFormatada("PROCESSO "+ to_string(processo->getId())+" FOI SUBMETIDO", (Alinhamento::ESQUERDA), true);
+                    novaLinha(1);                         // Se não for de tempo real, continua na lista de entrada
+                    continue;
+                }
+                else if(mp->first_fit(processo) && processo->getPrioridade() > 0 ){
+                    processo->setUltimaFila(0);
+                    feedback[0]->inserir( processo );
+                    novaLinha(1);
+                    imprimirLinhaFormatada("PROCESSO "+ to_string(processo->getId())+" FOI SUBMETIDO", (Alinhamento::ESQUERDA), true);
+                    novaLinha(1);
+                    // Atualiza impressoras e discos disponíveis
+                    impressorasDisponiveis -= processo->getImpressoras();
+                    discosDisponiveis -= processo->getDiscos();
+                    continue;
+                }
+                else{
+                    suspensos->inserir(processo);
+                    novaLinha(1);
+                    imprimirLinhaFormatada("PROCESSO "+ to_string(processo->getId())+" FOI SUSPENSO", (Alinhamento::ESQUERDA), true);
+                    novaLinha(1);
                     continue;
                 }
 
@@ -83,14 +107,8 @@ void Escalonador::encaminharProcessos(int tempo_atual){
             }
 
         }
-        else if(processo->getChegada() > tempo_atual)
-            entradaTemp.push_back(processo);
-        
         else{
-            suspensos->inserir(processo);
-            novaLinha(1);
-            imprimirLinhaFormatada("PROCESSO "+ to_string(processo->getId())+" FOI SUSPENSO", (Alinhamento::ESQUERDA), true);
-            novaLinha(1);
+            entradaTemp.push_back(processo);
         }
 
     }
@@ -103,15 +121,15 @@ void Escalonador::encaminharProcessos(int tempo_atual){
 
 void Escalonador::encaminharSuspensos(){
 
-    list<Processo*> aux;
-    while( !suspensos->empty() ){
-
+    Fila* aux = new Fila();
+    while( !suspensos->empty()){
         Processo* processo = suspensos->retirar();
 
         // Checa recursos disponíveis
-        if( processo->getImpressoras() > impressorasDisponiveis || processo->getDiscos() > discosDisponiveis )
-            aux.push_back(processo);
-
+        if( processo->getImpressoras() > impressorasDisponiveis || processo->getDiscos() > discosDisponiveis ){
+            aux->inserir(processo);
+            continue;
+        }
         // Checar MP
         if( !mp->first_fit(processo) ){     // Tenta alocar o processo
             
@@ -128,15 +146,26 @@ void Escalonador::encaminharSuspensos(){
                 discosDisponiveis -= processo->getDiscos();
             }
             else
-                aux.push_back(processo);
+                aux->inserir(processo);
 
         }
 
+        if((mp->first_fit(processo))){
+            processo->setUltimaFila(0);
+            feedback[0]->inserir( processo );
+            novaLinha(1);
+            imprimirLinhaFormatada("PROCESSO "+ to_string(processo->getId())+" FOI SUBMETIDO", (Alinhamento::ESQUERDA), true);
+            novaLinha(1);
+            // Atualiza impressoras e discos disponíveis
+            impressorasDisponiveis -= processo->getImpressoras();
+            discosDisponiveis -= processo->getDiscos();
+        }
     }
-    for (Processo* processo : aux){
-        suspensos->inserir(processo);
+    while(!aux->empty()){
+        Processo* p = aux->retirar();
+        suspensos->inserir(p);
     }
-    
+    aux->liberar(); 
 }
 
 list<CPU*> Escalonador::cpusOciosas(){
@@ -220,7 +249,7 @@ void Escalonador::executarProcessos(){
 
 // Submeter(?) processos para CPUs ociosas
 void Escalonador::submeterProcessos(){
-
+    novaLinha(1);
     for(CPU* cpu : cpusOciosas() ){                                     // Submete processos de tempo real
 
         if( !FTR->empty() )
@@ -233,7 +262,7 @@ void Escalonador::submeterProcessos(){
         for(int fila = 0; fila < N_FILAS_FEEDBACK; fila++){             // Percorre filas
             
             if( !feedback[fila]->empty() ){
-                cpu->receberProcesso( feedback[fila]->retirar() );      // Submete primeiro processo da fila
+                cpu->receberProcesso( feedback[fila]->retirar() );     // Submete primeiro processo da fila
                 break;
             }
         }
@@ -320,6 +349,9 @@ void Escalonador::suspender(int tam_necessario){
         if(!feedback[fila]->empty()){
             Processo* p = feedback[fila]->retirar();
             mp->remover(p);
+            novaLinha(1);
+            imprimirLinhaFormatada("PROCESSO "+ to_string(p->getId())+" FOI SUSPENSO", (Alinhamento::ESQUERDA), true);
+            novaLinha(1);
             // Atualiza impressoras e discos disponíveis
             impressorasDisponiveis += p->getImpressoras();
             discosDisponiveis += p->getDiscos();

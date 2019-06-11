@@ -29,6 +29,7 @@ class Escalonador{
 
         int impressorasDisponiveis;          // Impressoras e Discos disponíveis no sistema
         int discosDisponiveis;
+        int cpusociosas;
 
 
     public:

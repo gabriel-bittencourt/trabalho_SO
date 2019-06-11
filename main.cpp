@@ -53,15 +53,18 @@ int main(void){
     escalonador->imprimirProcessosEntrada();
     novaLinha(2);
     imprimirLinhaFormatada("----------------INICIANDO ESCALONADOR----------------", (Alinhamento::CENTRO), true);
-    novaLinha(2);
+    novaLinha(1);
     char continuar = 's';
     int tempo_atual = 0;
 
     while((!entrada.empty() || mp->memoria_usada() > 0) && (continuar == 's' || continuar =='S')){
+        novaLinha(1);
+        printCharRep('-', 100, true);
         imprimirLinhaFormatada("TEMPO ATUAL --> " + to_string(tempo_atual) + "s", (Alinhamento::ESQUERDA), true);
-        escalonador->encaminharSuspensos();
-
+        printCharRep('-', 100, true);
         escalonador->encaminharProcessos(tempo_atual);
+        
+        escalonador->encaminharSuspensos();
 
         escalonador->submeterProcessos();
 
