@@ -81,7 +81,7 @@ bool MP::first_fit(Processo* p){
     return false;
 }
 
-int MP::buscar(Processo* processo){
+int MP::buscar(Processo* processo){ //busca a localizacao de um processo
     for(No no : espacos){
         if( no.processo == processo->getId() )
             return no.inicio;
@@ -93,7 +93,9 @@ int MP::memoria_usada(){
     int m = 0;
 
     for(list<No>::iterator it = espacos.begin(); it != espacos.end(); it++)
-        if(it->ocupado)  m+= it->tamanho;
+        if(it->ocupado){
+            m+= it->tamanho;
+        }
 
     return m;
 }

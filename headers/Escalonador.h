@@ -9,8 +9,8 @@
 
 #define QUANTUM 2
 
-#define TEMPO_USO_DISCO 2
-#define TEMPO_USO_IMPRESSORA 2
+#define TEMPO_USO_DISCO 8
+#define TEMPO_USO_IMPRESSORA 8
 
 
 class Escalonador{
