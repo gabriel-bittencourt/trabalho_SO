@@ -6,6 +6,10 @@ using namespace std;
 
 
 #include "headers/Escalonador.h"
+#include "CPU.cpp"
+#include "MP.cpp"
+#include "Fila.cpp"
+#include "Escalonador.cpp"
 #include "ListaEntrada.cpp"
 
 
@@ -27,7 +31,7 @@ int main(void){
     list<Processo*> processosEntrada;
     processosEntrada = lerProcessosDeArquivo("entrada.txt");
     novaLinha(1);
-    imprimirLinhaFormatada("* * * * *", (Alinhamento::CENTRO), true);
+    imprimirLinhaFormatadaDef("* * * * *", Alinhamento::CENTRO, 40, true);
 
     // Inicializa CPUs
     list<CPU*> cpus;
@@ -45,6 +49,7 @@ int main(void){
 
     // Inicializa escalonador
     Escalonador* escalonador = new Escalonador(processosEntrada, cpus, mp, impressoras, discos);
+    list<Processo*> entrada = escalonador->getEntrada();
     escalonador->imprimirProcessosEntrada();
     novaLinha(2);
     imprimirLinhaFormatada("----------------INICIANDO ESCALONADOR----------------", (Alinhamento::CENTRO), true);
@@ -52,7 +57,7 @@ int main(void){
     char continuar = 's';
     int tempo_atual = 0;
 
-    while(!processosEntrada.empty() && (continuar == 's' || continuar =='S')){
+    while((!entrada.empty() || mp->memoria_usada() > 0) && (continuar == 's' || continuar =='S')){
         imprimirLinhaFormatada("TEMPO ATUAL --> " + to_string(tempo_atual) + "s", (Alinhamento::ESQUERDA), true);
         escalonador->encaminharSuspensos();
 
@@ -66,6 +71,7 @@ int main(void){
         tempo_atual++;
         imprimirLinhaFormatada("CONTINUAR?  (S)  (N)", (Alinhamento::CENTRO), true);
         cin >> continuar;
+        entrada = escalonador->getEntrada();
     }
     novaLinha(1);
     if(continuar != 's'|| continuar != 's')

@@ -7,7 +7,6 @@
 using namespace std;
 
 #include "headers/Processo.h"
-#include "headers/ConsoleManager.h"
 
 
 static void ordernarPorChegada(list<Processo*> &processos){
@@ -25,10 +24,10 @@ static void ordernarPorChegada(list<Processo*> &processos){
                         return p1->getTempoProcessamento() < p2->getTempoProcessamento();
 
                     }
-                    return p1->getDiscos() < p1->getDiscos();
+                    return p1->getDiscos() > p1->getDiscos();
 
                 }
-                return p1->getImpressoras() < p2->getImpressoras();
+                return p1->getImpressoras() > p2->getImpressoras();
 
             }
             return p1->getPrioridade() < p2->getPrioridade();

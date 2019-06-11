@@ -3,7 +3,7 @@
 using namespace std;
 
 #include "headers/Processo.h"
-#include "headers/ConsoleManager.h"
+#include "ConsoleManager.cpp"
 
 Processo::Processo(){};
 
@@ -53,7 +53,6 @@ void Processo::imprimir(){
 	cout << " | ";
     imprimirLinhaFormatadaDef(to_string(discos), (Alinhamento::CENTRO), 7, true);
 }
-
 
 int Processo::getId(){
 	return id;

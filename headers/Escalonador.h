@@ -55,6 +55,8 @@ class Escalonador{
 
         int getDiscosDisponiveis();
 
+        list<Processo*> getEntrada();
+
         void suspender(int tam_necessario);
 
 };

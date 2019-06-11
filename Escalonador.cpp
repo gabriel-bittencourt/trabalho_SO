@@ -3,7 +3,7 @@
 using namespace std;
 
 #include "headers/Escalonador.h"
-#include "headers/ConsoleManager.h"
+#include "Processo.cpp"
 
 #define N_FILAS_FEEDBACK 3
 
@@ -207,7 +207,8 @@ void Escalonador::executarProcessos(){
             cpu->liberarProcesso();
 
         }
-        else {
+        if((processo->getPrioridade() > 0 &&                       // Processo é de tipo Usuário
+            cpu->getTempoProcessoAtual() < QUANTUM && processo->getTempoProcessamento() > 0) || (processo->getPrioridade() == 0 && processo->getTempoProcessamento() > 0)){
             novaLinha(1);
             imprimirLinhaFormatada("PROCESSO "+ to_string(processo->getId())+" CONTINUA EXECUTANDO", (Alinhamento::ESQUERDA), true);
             novaLinha(1);
@@ -273,26 +274,25 @@ void Escalonador::imprimirProcessosCPUs(){
 	imprimirLinhaFormatadaDef("Prioridade", (Alinhamento::CENTRO), 11,  false);
 	cout << " | ";
 	imprimirLinhaFormatadaDef("Tempo de Processamento Atual", (Alinhamento::CENTRO), 28, true);
-    for(CPU* cpu : cpus){
-        if(cpu->getOcupado()){
-            Processo* processo = cpu->getProcesso();
-            printCharRep('-', 100, true);
-            imprimirLinhaFormatadaDef(to_string(contCPU), (Alinhamento::CENTRO), 4, false);
-            cout << " | ";
-            imprimirLinhaFormatadaDef(to_string(processo->getId()), (Alinhamento::CENTRO), 9, false);
-            cout << " | ";
-            imprimirLinhaFormatadaDef(to_string(processo->getChegada()), (Alinhamento::CENTRO), 8, false);
-            cout << " | ";
-            imprimirLinhaFormatadaDef(to_string(processo->getPrioridade()), (Alinhamento::CENTRO), 11,  false);
-            cout << " | ";
-            imprimirLinhaFormatadaDef(to_string(cpu->getTempoProcessoAtual()), (Alinhamento::CENTRO), 28, false);
-        }
-        else{
-            printCharRep('-', 100, true);
-            imprimirLinhaFormatadaDef(to_string(contCPU), (Alinhamento::CENTRO), 4, false);
-            cout << " | ";
-            imprimirLinhaFormatadaDef("OCIOSA", (Alinhamento::CENTRO), 9, true);
-        }
+    for(CPU* cpu : cpusOcupadas()){
+        Processo* processo = cpu->getProcesso();
+        printCharRep('-', 100, true);
+        imprimirLinhaFormatadaDef(to_string(contCPU), (Alinhamento::CENTRO), 4, false);
+        cout << " | ";
+        imprimirLinhaFormatadaDef(to_string(processo->getId()), (Alinhamento::CENTRO), 9, false);
+        cout << " | ";
+        imprimirLinhaFormatadaDef(to_string(processo->getChegada()), (Alinhamento::CENTRO), 8, false);
+        cout << " | ";
+        imprimirLinhaFormatadaDef(to_string(processo->getPrioridade()), (Alinhamento::CENTRO), 11,  false);
+        cout << " | ";
+        imprimirLinhaFormatadaDef(to_string(cpu->getTempoProcessoAtual()), (Alinhamento::CENTRO), 28, true);
+        contCPU++;
+    }
+    for(CPU* cpu : cpusOciosas()){
+        printCharRep('-', 100, true);
+        imprimirLinhaFormatadaDef(to_string(contCPU), (Alinhamento::CENTRO), 4, false);
+        cout << " | ";
+        imprimirLinhaFormatadaDef("OCIOSA", (Alinhamento::CENTRO), 9, true);
         contCPU++;
     }
     printCharRep('-', 100, true);
@@ -306,6 +306,10 @@ int Escalonador::getDiscosDisponiveis(){
     return discosDisponiveis;
 }
 
+list<Processo*> Escalonador::getEntrada(){
+    return entrada;
+}
+
 void Escalonador::suspender(int tam_necessario){
     
     int tamanhoLivre = mp->getTamanho() - mp->memoria_usada();    
@@ -315,7 +319,7 @@ void Escalonador::suspender(int tam_necessario){
         
         if(!feedback[fila]->empty()){
             Processo* p = feedback[fila]->retirar();
-
+            mp->remover(p);
             // Atualiza impressoras e discos disponíveis
             impressorasDisponiveis += p->getImpressoras();
             discosDisponiveis += p->getDiscos();
