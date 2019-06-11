@@ -13,6 +13,8 @@ class Processo {
         int impressoras;
         int discos;
 		int ultima_fila;
+		int tempo_uso_imp;
+		int tempo_uso_disc;
 
     public:
 
@@ -51,6 +53,10 @@ class Processo {
 
 		int getUltimaFila();
 
+		int getTempoUsoImp();
+
+		int getTempoUsoDisc();
+
 		void setId(int _id);
 		
 		void setChegada(int _chegada);
@@ -66,6 +72,10 @@ class Processo {
 		void setDiscos(int _discos);
 
 		void setUltimaFila(int _ultima_fila);
+
+		void setTempoUsoImp(int _tempo_uso_imp);
+
+		void setTempoUsoDisc(int _tempo_uso_disc);
 
 };
 

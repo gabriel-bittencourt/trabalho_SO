@@ -25,13 +25,13 @@ int main(void){
     imprimirLinhaFormatada("-------------------------------------------------", (Alinhamento::CENTRO), true);
     imprimirLinhaFormatada("E S C A L O N A D O R    D E    P R O C E S S O S", (Alinhamento::CENTRO), true);
     imprimirLinhaFormatada("-------------------------------------------------", (Alinhamento::CENTRO), true);
-    imprimirLinhaFormatada("Iniciando leitura do arquivo de entrada...", (Alinhamento::ESQUERDA), true);
+    imprimirLinhaFormatada(" Iniciando leitura do arquivo de entrada...", (Alinhamento::ESQUERDA), true);
     novaLinha(1);
     // Lê arquivo de entrada
     list<Processo*> processosEntrada;
     processosEntrada = lerProcessosDeArquivo("entrada.txt");
     novaLinha(1);
-    imprimirLinhaFormatadaDef("* * * * *", Alinhamento::CENTRO, 40, true);
+    imprimirLinhaFormatadaDef("* * * * *", Alinhamento::CENTRO, 50, true);
 
     // Inicializa CPUs
     list<CPU*> cpus;
@@ -49,7 +49,8 @@ int main(void){
 
     // Inicializa escalonador
     Escalonador* escalonador = new Escalonador(processosEntrada, cpus, mp, impressoras, discos);
-    list<Processo*> entrada = escalonador->getEntrada();
+    list<Processo*> entrada = processosEntrada;
+    list<CPU*> ocupadas = escalonador->cpusOcupadas();
     escalonador->imprimirProcessosEntrada();
     novaLinha(2);
     imprimirLinhaFormatada("----------------INICIANDO ESCALONADOR----------------", (Alinhamento::CENTRO), true);
@@ -57,7 +58,7 @@ int main(void){
     char continuar = 's';
     int tempo_atual = 0;
 
-    while((!entrada.empty() || mp->memoria_usada() > 0) && (continuar == 's' || continuar =='S')){
+    while((!entrada.empty() || !ocupadas.empty()) && (continuar == 's' || continuar =='S')){
         novaLinha(1);
         printCharRep('-', 100, true);
         imprimirLinhaFormatada("TEMPO ATUAL --> " + to_string(tempo_atual) + "s", (Alinhamento::ESQUERDA), true);
@@ -67,6 +68,8 @@ int main(void){
         escalonador->encaminharSuspensos();
 
         escalonador->submeterProcessos();
+
+        ocupadas = escalonador->cpusOcupadas();
 
         escalonador->imprimirProcessosCPUs();
 
@@ -79,8 +82,10 @@ int main(void){
     novaLinha(1);
     if(continuar != 's'|| continuar != 's')
         imprimirLinhaFormatada("* * * * SAINDO DO ESCALONADOR DE PROCESSOS * * * *", (Alinhamento::CENTRO), true);
-    else
-        imprimirLinhaFormatada("* * * TODOS OS PROCESSOS FORAM PROCESSADOS * * *", (Alinhamento::CENTRO),true);
+    if(ocupadas.empty()){
+        novaLinha(1);
+        imprimirLinhaFormatada("* * * * TODOS OS PROCESSOS FORAM EXECUTADOS * * * *", (Alinhamento::CENTRO),true);
+    }
     novaLinha(1);
     imprimirLinhaFormatada("--------ESCALONADOR DE PROCESSOS ENCERRADO--------", (Alinhamento::CENTRO), true);
 

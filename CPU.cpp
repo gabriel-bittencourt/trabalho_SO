@@ -10,13 +10,13 @@ CPU::CPU(){
     tempo_processo_atual = 0;
 }
 
-void CPU::receberProcesso(Processo* p){
+void CPU::receberProcesso(Processo* p){ //CPU recebe um processo e fica ocupada
     processo = p;
     ocupado = true;
     tempo_processo_atual = 0;
 }
 
-Processo* CPU::liberarProcesso(){
+Processo* CPU::liberarProcesso(){ //tira processo da CPU e CPU fica ociosa
     tempo_processo_atual = 0;
     ocupado = false;
     return processo;
@@ -25,9 +25,15 @@ Processo* CPU::liberarProcesso(){
 void CPU::executar(){
 
     processo->setTempoProcessamento(
-        processo->getTempoProcessamento() - 1
+        processo->getTempoProcessamento() - 1  // tempo de processamento restante do processo atualizado
     );
-    tempo_processo_atual++;
+    if (processo->getImpressoras() > 0){
+        processo->setTempoUsoImp(processo->getTempoUsoImp() + 1); // tempo de uso de impressoras atualizado
+    }
+    if (processo->getDiscos() > 0){
+        processo->setTempoUsoDisc(processo->getTempoUsoDisc() + 1); //tempo de uso de discos atualizado
+    }
+    tempo_processo_atual++; // atualiza tempo de execucao do processo na CPU
 }
 
 void CPU::setProcesso(Processo* _processo){

@@ -22,6 +22,8 @@ Processo::Processo(
 	tamanho = _tamanho;
 	impressoras = _impressoras;
 	discos = _discos;
+	tempo_uso_imp = 0;
+	tempo_uso_disc = 0;
 }
 
 // Copy constructor
@@ -33,10 +35,13 @@ Processo::Processo(const Processo &p) {
 	tamanho = p.tamanho;
 	impressoras = p.impressoras;
 	discos = p.discos;
+	tempo_uso_imp = p.tempo_uso_imp;
+	tempo_uso_disc = p.tempo_uso_disc;
 } 
 
-int Processo::id_atual = 0;
+int Processo::id_atual = 0; //gerador de ID de cada processo
 
+// imprime os dados de um processo
 void Processo::imprimir(){
 	printCharRep('-', 100, true);
 	imprimirLinhaFormatadaDef(to_string(chegada), (Alinhamento::CENTRO), 8, false);
@@ -86,6 +91,14 @@ int Processo::getUltimaFila(){
 	return ultima_fila;
 }
 
+int Processo::getTempoUsoImp(){
+	return tempo_uso_imp;
+}
+
+int Processo::getTempoUsoDisc(){
+	return tempo_uso_disc;
+}
+
 void Processo::setId(int _id){
 	id = _id;
 }
@@ -116,4 +129,12 @@ void Processo::setDiscos(int _discos){
 
 void Processo::setUltimaFila(int _ultima_fila){
 	ultima_fila = _ultima_fila;
+}
+
+void Processo::setTempoUsoImp(int _tempo_uso_imp){
+	tempo_uso_imp = _tempo_uso_imp;
+}
+
+void Processo::setTempoUsoDisc(int _tempo_uso_disc){
+	tempo_uso_disc = _tempo_uso_disc;
 }
